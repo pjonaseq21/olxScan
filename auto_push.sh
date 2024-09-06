@@ -9,6 +9,6 @@ else
     echo "Zmiany znalezione, wykonuję push"
     git add .
     git commit -m "Automatyczne aktualizowanie repozytorium"
-    git push origin master
+    git push origin main
 fi
 
