@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-cd "~/Pulpit/programowanie_szukanie_mieszkania (1. kopia)"
+cd "/home/duck/Pulpit/programowanie_szukanie_mieszkania (1. kopia)"
 
 if git diff-index --quiet HEAD --; then
     echo "Brak zmian do wypchnięcia"
