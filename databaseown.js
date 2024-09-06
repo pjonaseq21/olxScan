@@ -2,7 +2,9 @@ const fsPromise = require('fs').promises;
 const fs = require('fs');
 const filePath = './db.txt';
 const crypto = require("crypto")
+const path = require('path');
 
+const folderPath = path.join(__dirname, 'folder_db');
 
 if(fs.existsSync(filePath)){
     console.log("plik istnieje")
@@ -11,25 +13,20 @@ if(fs.existsSync(filePath)){
     fs.openSync("db.txt","w")
 }
 
-async function searchTroughDb(string){
-    console.log("przeszukuje baze danych")
-    const fileContent = fs.readFileSync(filePath, 'utf-8');
-    const lines = fileContent.split('\n');
-    const match = lines.some((line,index)=>{
-        if(line.trim() === string.trim()){
-            return true
-            }
-            return false
-        })
-
-    if (match){
-        return match
+async function searchTroughDirectory(md5){
+    try{
+        const files = await fsPromise.readdir(folderPath)
+        console.log(files)
+        if (files.includes(`${md5}.txt`)){
+            console.log("link jest obecny w bazie danych")
+        }
+        else{
+            console.log('nowy link wpisuje do bazy danych...')
+        }
+    }catch(err){
+        console.log("error searchTroughDirectory ",err)
     }
-    else{
-        return match
-    }
-    };
-
+}
 async function addToDb(string) {
     try {
         await fsPromise.appendFile("db.txt", string);
@@ -40,11 +37,25 @@ async function addToDb(string) {
 }
 
 async function hashToMd5(string){
-    var hash = crypto.createHash('md5').update(name).digest('hex');
+    var hash = crypto.createHash('md5').update(string).digest('hex');
     return hash
 }
 
-let testHash = hashToMd5('https://olx.pl/d/oferta/mieszkanie-do-wynajecia-47m-skyres-ul-lubelska-CID3-IDIfvXZ.html')
-console.log(testHash)
+async function createFile(md5,link){
+    try{
+        await fsPromise.writeFile(`./folder_db/${md5}.txt`,link,'utf-8')
+    }catch(err){
+        console.error("błąd podczas tworzenia ",err)
+    }
+}
+//main function to create files
+async function createFilesMd5(link){  
+    let md5 = await hashToMd5(link)
+    await createFile(md5,link)
+}
+const run = async()=>{
+    await createFilesMd5('https://olx.pl/d/oferta/nowe-komfortowe-mieszkanie-rzeszow-os-nova-graniczna-2-pokoje-36m2-CID3-IDRiEqF.html')
+    await searchTroughDirectory('5b78d5920aabbb7cb30d7fe314fe6cfe')
+}
+run()
 
-module.exports = {searchTroughDb,addToDb};

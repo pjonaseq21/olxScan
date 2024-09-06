@@ -6,7 +6,7 @@ const {searchTroughDb,addToDb} = require("./databaseown")
 
 
 async function sendToWebhook(item){
-  const webhookUrl = 'https://discordapp.com/api/webhooks/795258359598022686/rtKyC_HWFs0kXBn-qjUvTXJbSoYtImDAxvIRm00eFpcpm66DlAMNkWnHrgbzZoqNw5Vn';
+  const webhookUrl = 'webhook_url';
   const userId = '435800869896847360'
   const message = {
     content: `${item[0]}\n${item[1]}\n${item[2]}\n${item[3]} <@${userId}>`
