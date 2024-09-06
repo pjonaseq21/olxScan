@@ -1,7 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const process = require("process")
-const {searchTroughDb,addToDb} = require("./databaseown")
+const searchTroughDirectory= require("./databaseown")
 
 
 
@@ -122,13 +122,11 @@ async function sprawdzCzynsz(mainArray){
           try {
             console.log(`Analizowanie linku: ${item[0]}`);
             
-            let present = await searchTroughDb(item[0]);
+            let present = await searchTroughDirectory(item[0]);
             if (present) {
                 console.log("Link jest już w bazie danych");
             } else {
-                await addToDb(`${item[0]}\n`);
                 console.log("Dodano link do bazy danych:", item[0]);
-                await sendToWebhook(item);
                 console.log(item)
                 console.log("Wysłano do webhooka:", item[0]);
             }

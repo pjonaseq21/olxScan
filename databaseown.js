@@ -6,36 +6,29 @@ const path = require('path');
 
 const folderPath = path.join(__dirname, 'folder_db');
 
-if(fs.existsSync(filePath)){
-    console.log("plik istnieje")
+if(fs.existsSync(folderPath)){
+    console.log("folder istnieje")
 }else{
-    console.log("tworze plik...")
-    fs.openSync("db.txt","w")
+    console.log("tworze folder...")
+    fs.mkdirSync("./folder_db")
 }
 
-async function searchTroughDirectory(md5){
+async function searchTroughDirectory(link){
     try{
+        let md5 = await hashToMd5(link)
         const files = await fsPromise.readdir(folderPath)
-        console.log(files)
         if (files.includes(`${md5}.txt`)){
-            console.log("link jest obecny w bazie danych")
+            return true
         }
         else{
             console.log('nowy link wpisuje do bazy danych...')
+            await createFile(md5,link)
+
         }
     }catch(err){
         console.log("error searchTroughDirectory ",err)
     }
 }
-async function addToDb(string) {
-    try {
-        await fsPromise.appendFile("db.txt", string);
-        console.log("Dopisano do pliku.");
-    } catch (err) {
-        console.error("Wystąpił błąd podczas dopisywania do pliku:", err);
-    }
-}
-
 async function hashToMd5(string){
     var hash = crypto.createHash('md5').update(string).digest('hex');
     return hash
@@ -48,14 +41,8 @@ async function createFile(md5,link){
         console.error("błąd podczas tworzenia ",err)
     }
 }
-//main function to create files
-async function createFilesMd5(link){  
-    let md5 = await hashToMd5(link)
-    await createFile(md5,link)
-}
 const run = async()=>{
-    await createFilesMd5('https://olx.pl/d/oferta/nowe-komfortowe-mieszkanie-rzeszow-os-nova-graniczna-2-pokoje-36m2-CID3-IDRiEqF.html')
-    await searchTroughDirectory('5b78d5920aabbb7cb30d7fe314fe6cfe')
+    await searchTroughDirectory("https://olx.pl/d/oferta/mieszkanie-do-wynajecia-rzeszow-CID3-ID11JGTS.html")
 }
-run()
 
+module.exports = searchTroughDirectory;
