@@ -151,10 +151,4 @@ const run = async () => {
 };
 
 setInterval(run, 300000);
-//a jebac to dziala
-// poprawic date jezeli jest ze dzisiaj dodane to niech doda dzisiejsza date
-// dodac sumowanie kaski
-// zintegrowac baze danych ze skryptem
-// dodac wysylanie webhookiem na dc
-// odpalic na jakiejs vm czy cos
 
